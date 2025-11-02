@@ -1,0 +1,60 @@
+\documentclass[letterpaper]{article}
+\usepackage{tempora}%\usepackage{libertinus}%\usepackage{lmodern}
+\usepackage{multicol}
+\pagestyle{plain}
+\usepackage{microtype}
+\usepackage[breakable]{tcolorbox}
+\usepackage{fullpage}
+\usepackage{fullwidth}
+\usepackage{color}
+\usepackage{amsmath}
+%\usepackage{titlesec}
+
+\usepackage[hidelinks,colorlinks=true,urlcolor=blue]{hyperref}
+
+%\titlespacing\subsection{0pt}{12pt plus 4pt minus 2pt}{2pt plus 2pt minus 2pt}
+
+\DisableLigatures{encoding = *, family = *}
+\pagenumbering{gobble}
+
+\newenvironment{location}{\color{gray}}  %{\ignorespacesafterend}
+
+\begin{document}
+\begin{fullwidth}[width=\linewidth+2cm]%[width=\linewidth+2cm]
+\begin{center}
+\subsection*{Orc Library Module Code Flow Structure}
+\vspace{3pt}
+\end{center}
+\noindent
+
+  \subsection*{Definition}
+
+    \begin{equation*}
+    \begin{aligned}
+orc.module &= function(cb) \{
+    var mod = \{loop:false\};
+    cb(mod);
+    while (mod.loop) \{ cb(mod) \};
+    return mod;
+\}
+    \end{aligned}
+    \end{equation*}
+
+  \subsection*{Usage}
+
+    \begin{equation*}
+    \begin{aligned}
+        moduleA = orc. & module\bigl( (m) \;\Rightarrow\; \{ \\
+            & if(!m.loop) \{ m.loop=true; \} \\
+            & if(m.loop) \{ m.i == null ? m.i = 0 : m.i++ \}
+            & if(m.i == 5) \{ m.five = true; \}
+        \}\bigr) \\
+        moduleB = orc. & module\bigl( (m) \;\Rightarrow\; \{ \\
+            & if (moduleA.five) \{ \}
+        \}\bigr)
+    \end{aligned}
+    \end{equation*}
+
+
+\end{fullwidth}
+\end{document}

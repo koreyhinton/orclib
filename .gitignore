@@ -1,0 +1,10 @@
+# Emacs autosave files
+\#*\#
+.\#*
+*~
+
+# TeX
+*.log
+*.aux
+*.out
+*.pdf

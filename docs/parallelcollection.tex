@@ -1,0 +1,56 @@
+\documentclass[letterpaper]{article}
+\usepackage{tempora}%\usepackage{libertinus}%\usepackage{lmodern}
+\usepackage{multicol}
+\pagestyle{plain}
+\usepackage{microtype}
+\usepackage[breakable]{tcolorbox}
+\usepackage{fullpage}
+\usepackage{fullwidth}
+\usepackage{color}
+\usepackage{amsmath}
+%\usepackage{titlesec}
+
+\usepackage[hidelinks,colorlinks=true,urlcolor=blue]{hyperref}
+
+%\titlespacing\subsection{0pt}{12pt plus 4pt minus 2pt}{2pt plus 2pt minus 2pt}
+
+\DisableLigatures{encoding = *, family = *}
+\pagenumbering{gobble}
+
+\newenvironment{location}{\color{gray}}  %{\ignorespacesafterend}
+
+\begin{document}
+\begin{fullwidth}[width=\linewidth+2cm]%[width=\linewidth+2cm]
+\begin{center}
+\subsection*{Orc Library Parallel Collection Code Flow Structure}
+\vspace{3pt}
+\end{center}
+\noindent
+
+  \subsection*{Initialize}
+
+    \begin{equation*}
+    \begin{aligned}
+        & A = [ \ ] /* list */ \\
+        & B = [ \ ] /* list */ \\
+        & pCollection = new \ ParallelCollection \text{<} A,B \text{>} \bigl( A, B \bigr)
+    \end{aligned}
+    \end{equation*}
+
+  \subsection*{Each Or Once}
+
+    \begin{equation*}
+    \begin{aligned}
+        pCollection. & Eor\bigl(
+            (a^\prime,b^\prime,frame,collector)
+                \;\Rightarrow\; \{ \\
+                & if(frame) \ \ \ \ \{/*First, or\ once*/\} \\
+                & if(a^\prime \neq null) \{/*a^\prime = a[i] \ \ \ \ \ \ \ \ \ \ */\} \\
+                & if(b^\prime \neq null) \{/*b^\prime = b[i] \ \ \ \ \ \ \ \ \ \ */\} \\
+                & collector.Collect(new \ A()) /*post-loop \ add*/ \\
+     \} &\bigr)
+    \end{aligned}
+    \end{equation*}
+
+\end{fullwidth}
+\end{document}
