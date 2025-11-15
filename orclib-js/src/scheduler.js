@@ -7,7 +7,9 @@ commandQuery(
     s.hover.x > -1 &&
     s.lastHover.x !== s.hover.x &&
     s.lastHover.y !== s.hover.y, () => {
-        console.log("moved");
+        console.log(`moved ${s.lastHover.x},${s.lastHover.y} => ${s.hover.x},${s.hover.y}`);
+        s.lastHover.x = s.hover.x;
+        s.lastHover.y = s.hover.y;
     }
 );
 
