@@ -1,8 +1,17 @@
 <!DOCTYPE html>
 <html>
     <head>
-
-    <script type="module" src="example.js"></script>
+    <script type="module" src="scheduler.js"></script>
+    <script>
+        window.schedule = { lastHover: { x: -1, y: -1 }, hover: { x: -1, y: -1 } };
+        document.addEventListener("DOMContentLoaded", () => {
+            scheduler(window.schedule);
+            document.addEventListener("mousemove", (e) => {
+                window.schedule.hover = { x: e.clientX, y: e.clientY };
+                scheduler(window.schedule);
+            });
+        });
+    </script>
     </head>
     <body></body>
 </html>
