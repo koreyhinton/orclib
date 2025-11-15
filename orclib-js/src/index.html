@@ -3,11 +3,22 @@
     <head>
     <script type="module" src="scheduler.js"></script>
     <script>
-        window.schedule = { lastHover: { x: -1, y: -1 }, hover: { x: -1, y: -1 } };
+        window.schedule = {
+            display: { drawn: 0, expanded: 0 },
+            lastHover: { x: -1, y: -1 },
+            hover: { x: -1, y: -1 },
+            click: 0
+        };
         document.addEventListener("DOMContentLoaded", () => {
             scheduler(window.schedule);
             document.addEventListener("mousemove", (e) => {
                 window.schedule.hover = { x: e.clientX, y: e.clientY };
+                window.schedule.click = 0;
+                scheduler(window.schedule);
+            });
+            document.addEventListener("click", (e) => {
+                window.schedule.hover = { x: e.clientX, y: e.clientY };
+                window.schedule.click = 1;
                 scheduler(window.schedule);
             });
         });
