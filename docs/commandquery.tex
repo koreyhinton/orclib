@@ -1,0 +1,63 @@
+\documentclass[letterpaper]{article}
+\usepackage{tempora}%\usepackage{libertinus}%\usepackage{lmodern}
+\usepackage{multicol}
+\pagestyle{plain}
+\usepackage{microtype}
+\usepackage[breakable]{tcolorbox}
+\usepackage{fullpage}
+\usepackage{fullwidth}
+\usepackage{color}
+\usepackage{amsmath}
+%\usepackage{titlesec}
+
+\usepackage[hidelinks,colorlinks=true,urlcolor=blue]{hyperref}
+
+%\titlespacing\subsection{0pt}{12pt plus 4pt minus 2pt}{2pt plus 2pt minus 2pt}
+
+\DisableLigatures{encoding = *, family = *}
+\pagenumbering{gobble}
+
+\newenvironment{location}{\color{gray}}  %{\ignorespacesafterend}
+
+\begin{document}
+\begin{fullwidth}[width=\linewidth+2cm]%[width=\linewidth+2cm]
+\begin{center}
+\subsection*{Orc Library Command Query Code Flow Structure}
+\vspace{3pt}
+\end{center}
+\noindent
+
+  \subsection*{Command Query}
+
+    A command query consists of many \textit{if-then} ($\beta - \varsigma$)
+    pairs that operate in two distinct phases. Since all state checks happen in phase 1, phase-1 expressions cannot operate on phase-2 intermediate/modified state.
+
+    \begin{equation*}
+    \begin{aligned}
+        & commandQuery \bigl( \\
+        & \ \ \ \ \beta_1, \ ()\;\Rightarrow\;\{ \ \varsigma_1 \ \}, \\
+        & \ \ \ \ \beta_2, \ ()\;\Rightarrow\;\{ \ \varsigma_2 \ \}, \\
+        & \ \ \ \ ... \\
+        & \bigr)
+    \end{aligned}
+    \end{equation*}
+
+    \subsubsection*{1. Condition phase $\beta$}
+
+    $\beta$ conditions are boolean expressions and all $\beta$ in a
+    $commandQuery$ evaluate immediately.
+
+    Their evaluation order is determined by the host language's function
+    argument evaluation semantics.
+
+    Each $\beta$ should be a pure boolean expression (no side effects).
+
+    \subsubsection*{2. Command phase $\varsigma$}
+
+    $\varsigma$ command code is wrapped in a parameterless lambda function
+    to ensure it
+    executes after all the command query's $\beta$ have finished evaluation and
+    only if the associated $\beta$ evaluated to true.
+
+\end{fullwidth}
+\end{document}

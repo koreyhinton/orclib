@@ -33,7 +33,8 @@
     \begin{aligned}
         & A = [ \ ] /* list */ \\
         & B = [ \ ] /* list */ \\
-        & pCollection = new \ ParallelCollection \text{<} A,B \text{>} \bigl( A, B \bigr)
+        & C = [ \ ] /* list */ \\
+        & pCollection = new \ ParallelCollection \text{<} A,B,C \text{>} \bigl( A, B, C \bigr)
     \end{aligned}
     \end{equation*}
 
@@ -41,14 +42,17 @@
 
     \begin{equation*}
     \begin{aligned}
-        pCollection. & Eor\bigl(
-            (a^\prime,b^\prime,frame,collector)
+        pCollection. & EachOrOnce\bigl(
+            (a^\prime,b^\prime,c^\prime,frame,collector)
                 \;\Rightarrow\; \{ \\
                 & if(frame) \ \ \ \ \{/*First, or\ once*/\} \\
                 & if(a^\prime \neq null) \{/*a^\prime = a[i] \ \ \ \ \ \ \ \ \ \ */\} \\
-                & if(b^\prime \neq null) \{/*b^\prime = b[i] \ \ \ \ \ \ \ \ \ \ */\} \\
-                & collector.Collect(new \ A()) /*post-loop \ add*/ \\
-     \} &\bigr)
+                & if(b^\prime \neq null) \{/*b^\prime = b[i] \ \ \ \ \ \ \ \ \ \ \ */\} \\
+                & if(c^\prime \neq null) \{ c = null \} /*post-loop \ remove \  */ \\
+                & if(a^\prime = null) \ \{ \\
+                & \ \ collector.Collect(new \ A()) /*post-loop \ add \ */ \\
+                & \}\\
+       \} \bigr) \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ &
     \end{aligned}
     \end{equation*}
 
