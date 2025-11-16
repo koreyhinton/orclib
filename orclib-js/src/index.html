@@ -1,28 +1,136 @@
 <!DOCTYPE html>
 <html>
     <head>
+    <style>
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            display: none;
+            -webkit-appearance: none;
+        }
+        input[type="date"]::-webkit-inner-spin-button,
+        input[type="date"]::-webkit-clear-button {
+            display: none;
+        }
+        #scheduler-picker-body-lhs, #scheduler-picker-body-rhs {
+            width: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px; /* vertical spacing between buttons */
+            flex: 0 0 auto;
+        }
+        #scheduler-picker-body {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            align-items: center; /* vertically aligns side buttons to cal picker */
+        }
+        #scheduler-picker-body-calendar {
+            /* NODE WIDTH CALCULATION */
+            width: 595px;    /* 83 x 7 + 14 (7 x 2 border padding) */
+            flex: 0 0 595px; /* 83 x 7 + 14 (7 x 2 border padding) */
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .schedule-node {
+            background-color: lightgray;
+            /* NODE WIDTH DEFINITION */
+            width:83px;
+            height:83px;
+            border: 1px solid black;
+        }
+
+        scheduler-node {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
     <script type="module" src="scheduler.js"></script>
+    <script type="module" src="scheduler-dispatcher.js"></script>
     <script>
         window.schedule = {
-            display: { drawn: 0, expanded: 0 },
+            frame: 1,
+            display: { drawn: 0, expanded: 0, nativePickerClick: 0 },
             lastHover: { x: -1, y: -1 },
             hover: { x: -1, y: -1 },
-            click: 0
+            click: 0,
+            calendarNode: {},
+            calendarNodeView: {},
+            cachedDate: null,
+            startDayBox: 0,
+            endDayBox: 0
+        };
+        window.schedulerDispatch = {
+            initialized: 0,
+            pCollection: null
         };
         document.addEventListener("DOMContentLoaded", () => {
-            scheduler(window.schedule);
+
+            function dispatch() {
+                if (window.schedulerDispatch.initialized == 0)
+                {
+                    // initialize:
+                    window.schedulerDispatcher(window.schedule, window.scheduler);
+                    // not expanded call:
+                    window.schedule.calendarNode = {};
+                    window.schedule.calendarNodeView = {};
+                    window.scheduler(window.schedule);
+                }
+                else if (window.schedule.display.expanded == 1)
+                {
+                    window.schedulerDispatcher(window.schedule, window.scheduler);
+                }
+                else
+                {
+                    window.schedule.calendarNode = {};
+                    window.schedule.calendarNodeView = {};
+                    window.schedule.frame = 1;
+                    window.scheduler(window.schedule);
+                }
+            }
+            dispatch();
             document.addEventListener("mousemove", (e) => {
                 window.schedule.hover = { x: e.clientX, y: e.clientY };
                 window.schedule.click = 0;
-                scheduler(window.schedule);
+                dispatch();
             });
             document.addEventListener("click", (e) => {
                 window.schedule.hover = { x: e.clientX, y: e.clientY };
                 window.schedule.click = 1;
-                scheduler(window.schedule);
+                dispatch();
             });
         });
     </script>
     </head>
-    <body></body>
+    <body>
+        <div id="main">
+            <div id="scheduler">
+                <div id="scheduler-date">
+                    <input type="date" id="native-date-input" onclick="(()=>{window.schedule.display.nativePickerClick=1;window.schedulerDispatcher(window.schedule, window.scheduler);})();"></input>
+                </div>
+                <div id="scheduler-picker">
+                    <div id="scheduler-picker-header"></div>
+                    <div id="scheduler-picker-body" style="visibility: hidden">
+                        <div id="scheduler-picker-body-lhs">
+                            <div>
+                                <button>&lt;--</button>
+                            </div>
+                            <div>
+                                <button>&lt;*-</button>
+                            </div>
+                        </div>
+                        <div id="scheduler-picker-body-calendar" class="scheduler-node-container">
+                            <!-- JS-LOADED NODE VIEWS -->
+                        </div>
+                        <div id="scheduler-picker-body-rhs">
+                            <div>
+                                <button>--&gt;</button>
+                            </div>
+                            <div>
+                                <button>*-&gt;</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
 </html>
