@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <!-- "Source Sans 3", "Source Sans Pro", -apple-system, system-ui, sans-serif -->
+    <link rel="stylesheet" href="https://unpkg.com/missing.css@1.2.0">
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4/lodash.min.js"></script>
+    <style>
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            display: none;
+            -webkit-appearance: none;
+        }
+        input[type="date"]::-webkit-inner-spin-button,
+        input[type="date"]::-webkit-clear-button {
+            display: none;
+        }
+        #scheduler-picker-body-lhs, #scheduler-picker-body-rhs {
+            width: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px; /* vertical spacing between buttons */
+            flex: 0 0 auto;
+        }
+        #scheduler-picker-body {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            align-items: center; /* vertically aligns side buttons to cal picker */
+        }
+        .scheduler-collapsed {
+            height: 0 !important;
+            overflow: hidden;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        #scheduler-picker-body-calendar {
+            /* NODE WIDTH CALCULATION */
+            width: 595px;    /* 83 x 7 + 14 (7 x 2 border padding) */
+            flex: 0 0 595px; /* 83 x 7 + 14 (7 x 2 border padding) */
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .schedule-node {
+            background-color: lightgray;
+            /* NODE WIDTH DEFINITION */
+            width:83px;
+            height:83px;
+            border: 1px solid black;
+        }
+
+        scheduler-node {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+    <script type="module" src="scheduler-init.js"></script>
+    <script type="module" src="scheduler.js"></script>
+    <script type="module" src="scheduler-dispatcher.js"></script>
+    <script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+
+            /* EDGE CASES */
+            /* EDGE CASE
+                Month starts on Sunday (first box):
+                new Date(2023,0,1) // Jan
+            */
+            /* EDGE CASE
+                Month ends on Saturday (last box):
+                new Date(2025,4,1) // May
+            */
+            /* EDGE CASE
+                Days span 6 week rows by starting on Saturday:
+                new Date(2025,10,1) // November
+            */
+            /* END */
+
+            document.getElementById("native-date-input").valueAsDate
+                = new Date();
+
+            schedulerInit(); // schedule, schedulerDispatch objects
+
+            function dispatch() {
+
+                /*if (window.schedulerDispatch.initialized == 0)
+                {
+                    // initialize:
+                    window.schedulerDispatcher(window.schedule, window.scheduler);
+                    // not expanded call:
+                    window.schedule.calendarNode = {};
+                    window.schedule.calendarNodeView = {};
+                    window.scheduler(window.schedule);
+                }
+                else if (window.schedule.display.expanded == 1)
+                {
+                    console.log("expanded dispatch");
+                    window.schedulerDispatcher(window.schedule, window.scheduler);
+                }
+                else
+                {
+                    console.log("collapsed dispatch");
+                    window.schedule.calendarNode = {};
+                    window.schedule.calendarNodeView = {};
+                    window.schedule.frame = 1;
+                    window.scheduler(window.schedule);
+                }*/
+
+                window.schedulerDispatcher(window.schedule, window.scheduler);
+
+            }
+            //dispatch();
+            const throttledDispatch = _.throttle(dispatch, 16);
+            document.addEventListener("mousemove", (e) => {
+                if (window.schedule.display.expanded == 0)
+                    return;
+                //throttledDispatch();
+                /*window.schedule.hover = { x: e.clientX, y: e.clientY };
+                window.schedule.click = 0;
+                throttledDispatch();*/
+            });
+            document.addEventListener("click", (e) => {
+                window.schedule.hover = { x: e.clientX, y: e.clientY };
+                window.schedule.click = 1;
+                dispatch();
+            });
+
+            document.getElementById("native-date-input").addEventListener("click", function(e) {
+
+                if (window.schedule.display.expanded == 1)
+                {
+                    e.stopPropagation();
+                    return;
+                }
+
+                window.schedule.display.nativePickerClick = 1;
+                // window.schedule.display.expanded = !window.schedule.display.expanded;
+                dispatch();
+                //window.schedulerDispatcher(window.schedule, window.scheduler);
+                window.schedule.display.nativePickerClick = 0;
+                e.stopPropagation();
+            });
+
+        });
+    </script>
+    </head>
+    <body>
+
+<!-- SVG ICON DEFINITIONS -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <defs>
+    <symbol id="next-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-right-icon lucide-arrow-big-right"><path d="M6 9h6V5l7 7-7 7v-4H6V9z"></path></symbol>
+    <symbol id="previous-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-right-icon lucide-arrow-big-right"><g transform="rotate(180 12 12)"><path d="M6 9h6V5l7 7-7 7v-4H6V9z"></path></g></symbol>
+    <symbol id="previous-entry-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-right-icon lucide-arrow-big-right"><circle stroke="lightgray" fill="yellow" cx="8" cy="12" r="6" stroke-width="1"/><g transform="rotate(180 12 12)"><path d="M6 9h6V5l7 7-7 7v-4H6V9z"></path></g></symbol>
+    <symbol id="next-entry-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-right-icon lucide-arrow-big-right"><circle stroke="lightgray" fill="yellow" cx="16" cy="12" r="6" stroke-width="1"/><path d="M6 9h6V5l7 7-7 7v-4H6V9z"></path></symbol>
+    <!-- ... --->
+  </defs>
+</svg>
+<!-- END SVG ICON DEFINITIONS -->
+
+        <div id="main">
+            <!-- SCHEDULER -->
+            <div id="scheduler">
+                <div id="scheduler-date">
+                    <input type="date" id="native-date-input"></input><!--onclick="((e)=>{window.schedule.display.nativePickerClick=1;window.schedulerDispatcher(window.schedule, window.scheduler);e.stopPropagation();})();"-->
+                </div>
+                <div id="scheduler-picker">
+                    <div id="scheduler-picker-header"></div>
+                    <div id="scheduler-picker-body" class="scheduler-collapsed">
+                        <div id="scheduler-picker-body-lhs">
+                            <div>
+                                <section class="flex-row justify-content:space-between">
+                                    <button class="info iconbutton" type=button aria-label="Menu">
+                                        <svg width="24" height="24" aria-hidden=true>
+                                            <use href="#previous-icon">
+                                            </use>
+                                        </svg>
+                                    </button>
+                                </section>
+                            </div>
+                            <div style="margin-top: 44px;">
+                                <section class="flex-row justify-content:space-between">
+                                    <button class="info iconbutton" type=button aria-label="Menu">
+                                        <svg width="24" height="24" aria-hidden=true>
+                                            <use href="#previous-entry-icon">
+                                            </use>
+                                        </svg>
+                                    </button>
+                                </section>
+                            </div>
+                        </div>
+                        <div id="scheduler-picker-body-calendar" class="scheduler-node-container">
+                            <!-- JS-LOADED NODE VIEWS -->
+                        </div>
+                        <div id="scheduler-picker-body-rhs">
+                            <div>
+                                <section class="flex-row justify-content:space-between">
+                                    <button class="info iconbutton" type=button aria-label="Menu">
+                                        <svg width="24" height="24" aria-hidden=true>
+                                            <use href="#next-icon">
+                                            </use>
+                                        </svg>
+                                    </button>
+                                </section>
+                            </div>
+                            <div style="margin-top: 44px;">
+                                <section class="flex-row justify-content:space-between">
+                                    <button class="info iconbutton" type=button aria-label="Menu">
+                                        <svg width="24" height="24" aria-hidden=true>
+                                            <use href="#next-entry-icon">
+                                            </use>
+                                        </svg>
+                                    </button>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- MAIN -->
+            hello
+        </div>
+    </body>
+</html>

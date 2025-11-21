@@ -7,11 +7,13 @@ export const orcParallelCollection = (...collections) => {
             0
         );
         let i = 0;
+        let frameBit = 1;
         do {
             const collectionPrimes = c.collections.map(collection => collection[i]);
-            cb(...collectionPrimes, i==0, (position, val) => {
+            cb(...collectionPrimes, frameBit, (position, val) => {
                 c.collections[position].push(val);
             });
+            frameBit = 0;
             i++;
         } while (i < max);
     };
