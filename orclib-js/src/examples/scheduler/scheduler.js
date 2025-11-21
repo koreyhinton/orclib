@@ -40,14 +40,33 @@ commandQuery(
     // MOUSE - CLICK - ARROWS
     // TODO:
     and(1/*s.display.drawn*/, s.click), () => {
-        console.log('click1', `${s.hover.x},${s.hover.y}`);
+        // console.log('click1', `${s.hover.x},${s.hover.y}`);
     },
 
     // MOUSE - CLICK - DAY
     // TODO:
     and(/*s.display.drawn*/1, s.display.expanded, s.click), () => {
-        console.log('click2',s.frame, `${s.hover.x},${s.hover.y}`);
+        // console.log('click2',s.frame, `${s.hover.x},${s.hover.y}`);
     },
+
+    // MOUSE - CLICK - FOCUS STATE
+    and(
+        s.frame,
+        s.display.nativePickerClick
+    ), () => {
+        s.focused = 1;
+        console.log("FOCUSED");
+    },
+
+    and(
+        s.click,
+        s.frame,
+        not(s.display.nativePickerClick)
+    ), () => {
+        s.focused = 0;
+        console.log("BLUR");
+    },
+
 
     // MOUSE - CLICK - EXPAND
     // TODO:
@@ -57,14 +76,14 @@ commandQuery(
         /*s.display.drawn*/1,
         not(s.display.expanded)
     ), () => {
-        console.log('click3', `${s.hover.x},${s.hover.y}`);
+        //console.log('click3', `${s.hover.x},${s.hover.y}`);
         document.getElementById("scheduler-picker-body").classList.remove("scheduler-collapsed");
         s.display.expanded = 1;
     },
 
     // MOUSE - CLICK - COLLAPSE
-    // TODO:
     and(
+        not(s.focused),
         s.frame,
         not(s.display.nativePickerClick),
         /*s.display.drawn*/1,
@@ -88,7 +107,7 @@ commandQuery(
         s.hover.y < document.getElementById("scheduler-picker-body")
                 .getBoundingClientRect().top
     ), () => {
-        console.log('click4', `${s.hover.x},${s.hover.y}`);
+        //console.log('click4', `${s.hover.x},${s.hover.y}`);
         document.getElementById("scheduler-picker-body").classList.add("scheduler-collapsed");
         s.display.expanded = 0;
     }
@@ -109,9 +128,11 @@ commandQuery(
             document.getElementById("native-date-input").valueAsDate,
             s.calendarNode).isDayOfMonth
     ), () => {
+        /*
         console.log(s.currentDay);
         console.log("START DRAWING");
         console.log("draw cal start");
+        */
         let date = document.getElementById("native-date-input").valueAsDate;
         let n = dayOfMonthSlotter(date, s.calendarNode).n;
 
@@ -129,7 +150,7 @@ commandQuery(
             document.getElementById("native-date-input").valueAsDate,
             s.calendarNode).isDayOfMonth
     ), () => {
-        console.log("draw cal in progress");
+        //console.log("draw cal in progress");
         s.calendarNodeView.firstElementChild.innerHTML = "";
     },
 

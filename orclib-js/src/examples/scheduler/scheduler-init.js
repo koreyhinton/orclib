@@ -10,7 +10,8 @@ window.schedulerInit = function() {
         click: 0,
         calendarNode: {},
         calendarNodeView: {},
-        cachedDate: null
+        cachedDate: null,
+        focused: 0
     };
 
     window.schedulerDispatch = {

@@ -74,8 +74,11 @@
             */
             /* END */
 
-            document.getElementById("native-date-input").valueAsDate
-                = new Date();
+            let nativeDateInput = document.getElementById("native-date-input");
+            nativeDateInput.valueAsDate = new Date();
+            nativeDateInput.addEventListener('change', function() {
+                dispatch();
+            });
 
             schedulerInit(); // schedule, schedulerDispatch objects
 
@@ -110,7 +113,7 @@
             //dispatch();
             const throttledDispatch = _.throttle(dispatch, 16);
             document.addEventListener("mousemove", (e) => {
-                if (window.schedule.display.expanded == 0)
+                if (window.schedule.display.expanded)
                     return;
                 //throttledDispatch();
                 /*window.schedule.hover = { x: e.clientX, y: e.clientY };
@@ -121,16 +124,18 @@
                 window.schedule.hover = { x: e.clientX, y: e.clientY };
                 window.schedule.click = 1;
                 dispatch();
+                window.schedule.click = 0;
             });
 
             document.getElementById("native-date-input").addEventListener("click", function(e) {
 
+/*
                 if (window.schedule.display.expanded == 1)
                 {
                     e.stopPropagation();
                     return;
                 }
-
+*/
                 window.schedule.display.nativePickerClick = 1;
                 // window.schedule.display.expanded = !window.schedule.display.expanded;
                 dispatch();
