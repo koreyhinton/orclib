@@ -2,6 +2,7 @@
 // Wik-mode can be used in emacs to expand/collapse sections.
 
 import { and, not, commandQuery, commandQueryConfig } from '../../orc.js';
+import { dayOfMonthSlotter } from './day-of-month-slotter.js';
 
 ((strict) => {commandQueryConfig.strictMode = strict; window.scheduler = function(s) {
 
@@ -18,13 +19,6 @@ commandQuery(
 );
 */
 
-// USE DATE TO DRAW CALENDAR NODE NUMBERS - ISSUE
-// TODO: throttle this:
-/*commandQuery(
-
-
-);
-*/
 // MOUSE FRAME
 commandQuery(
 
@@ -107,64 +101,20 @@ commandQuery(
 
     (
         s.display.expanded &&
-        //s.drawCal == 0 &&
-        s.frame == 1 && (
-        document.getElementById("native-date-input")
-            .valueAsDate.toISOString().split('T')[0]
-        !== s.cachedDate?.toISOString().split('T')[0] ?? '')
-    ), () => {
-        let date = document.getElementById("native-date-input").valueAsDate;
-        //s.cachedDate = date;
-        let y = date.getUTCFullYear();
-        let m = date.getUTCMonth();
-        let numDays = new Date(y, m+1, 0).getDate();
-        s.startDayBox = new Date(y, m, 1).getDay();
-        s.endDayBox = numDays; //s.startDayBox + numDays;
-    },
-
-    (
-        s.display.expanded && (
-        document.getElementById("native-date-input")
-            .valueAsDate.toISOString().split('T')[0]
-        !== s.cachedDate?.toISOString().split('T')[0] ?? '')
-    ), () => {
-        s.currentDay = (
-            ( ((s.calendarNode.row-1)*7) + s.calendarNode.column )
-            - s.startDayBox
-        );
-    }
-
-
-);
-
-console.log(s.endDayBox);
-
-commandQuery(
-
-    /* 1, () => {
-        console.log("B");
-        //console.log(s, s.display.expanded, s.calendarNode?.row,s.calendarNode?.column);
-        console.log(document.getElementById("scheduler-picker-body").style.visibility != "hidden", s.calendarNode?.row,s.calendarNode?.column);
-    }, */
-
-
-    (
-        s.display.expanded &&
         s.calendarNode != null && s.calendarNode.column != null && (
         document.getElementById("native-date-input")
             .valueAsDate.toISOString().split('T')[0]
         !== s.cachedDate?.toISOString().split('T')[0] ?? '')
-        && s.endDayBox > 0 &&
-        not(s.currentDay < 1 || s.currentDay > s.endDayBox)
+        && dayOfMonthSlotter(
+            document.getElementById("native-date-input").valueAsDate,
+            s.calendarNode).isDayOfMonth
     ), () => {
         console.log(s.currentDay);
         console.log("START DRAWING");
         console.log("draw cal start");
-        let node = s.calendarNode;
-        let n = (
-            ( ((node.row-1)*7) + node.column )
-            - s.startDayBox
-        );
+        let date = document.getElementById("native-date-input").valueAsDate;
+        let n = dayOfMonthSlotter(date, s.calendarNode).n;
+
         s.calendarNodeView.firstElementChild.innerHTML = `${n}`;
         // console.log(node, node.row, node.column, s.endDayBox);
     },
@@ -174,8 +124,10 @@ commandQuery(
         /*s.drawCal==1 && */s.calendarNode != null && s.calendarNode.column != null && (
         document.getElementById("native-date-input")
             .valueAsDate.toISOString().split('T')[0]
-        !== s.cachedDate?.toISOString().split('T')[0] ?? '') &&
-        s.endDayBox > 0 && (s.currentDay < 1 || s.currentDay > s.endDayBox)
+        !== s.cachedDate?.toISOString().split('T')[0] ?? '')
+        && !dayOfMonthSlotter(
+            document.getElementById("native-date-input").valueAsDate,
+            s.calendarNode).isDayOfMonth
     ), () => {
         console.log("draw cal in progress");
         s.calendarNodeView.firstElementChild.innerHTML = "";

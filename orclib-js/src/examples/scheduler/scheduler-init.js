@@ -10,11 +10,7 @@ window.schedulerInit = function() {
         click: 0,
         calendarNode: {},
         calendarNodeView: {},
-        cachedDate: null,
-        //drawCal: 0,
-        startDayBox: 0,
-        endDayBox: 0,
-        currentDay: 0
+        cachedDate: null
     };
 
     window.schedulerDispatch = {
