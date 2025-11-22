@@ -5,6 +5,13 @@
     <link rel="stylesheet" href="https://unpkg.com/missing.css@1.2.0">
     <script src="https://cdn.jsdelivr.net/npm/lodash@4/lodash.min.js"></script>
     <style>
+
+        body {
+            font-family: "Ubuntu", "Source Sans 3", "Source Sans Pro", -apple-system, system-ui, sans-serif;
+            font-weight: 400;
+            font-size: 16px;
+        }
+
         input[type="date"]::-webkit-calendar-picker-indicator {
             display: none;
             -webkit-appearance: none;
@@ -12,6 +19,27 @@
         input[type="date"]::-webkit-inner-spin-button,
         input[type="date"]::-webkit-clear-button {
             display: none;
+        }
+        #scheduler {
+        }
+        #scheduler-date {
+            display: flex;
+            justify-content: center;
+
+
+        }
+        #native-date-input-container {
+            display: flex;
+            justify-content: center;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            /*background-color: black;*/
+
+        }
+        #native-date-input {
+            width: 230px;
+            text-align: center;
+            margin: 0 auto;
         }
         #scheduler-picker-body-lhs, #scheduler-picker-body-rhs {
             width: auto;
@@ -165,7 +193,9 @@
             <!-- SCHEDULER -->
             <div id="scheduler">
                 <div id="scheduler-date">
-                    <input type="date" id="native-date-input"></input><!--onclick="((e)=>{window.schedule.display.nativePickerClick=1;window.schedulerDispatcher(window.schedule, window.scheduler);e.stopPropagation();})();"-->
+                    <div id="native-date-input-container">
+                        <input type="date" id="native-date-input"></input><!--onclick="((e)=>{window.schedule.display.nativePickerClick=1;window.schedulerDispatcher(window.schedule, window.scheduler);e.stopPropagation();})();"-->
+                    </div>
                 </div>
                 <div id="scheduler-picker">
                     <div id="scheduler-picker-header"></div>

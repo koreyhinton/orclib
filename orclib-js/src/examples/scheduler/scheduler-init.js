@@ -4,7 +4,7 @@ window.schedulerInit = function() {
 
     window.schedule = {
         frame: 1,
-        display: { /*drawn: 0, */expanded: 0, nativePickerClick: 0 },
+        display: { expanded: 0, nativePickerClick: 0 },
         lastHover: { x: -1, y: -1 },
         hover: { x: -1, y: -1 },
         click: 0,
