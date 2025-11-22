@@ -67,12 +67,29 @@
             display: flex;
             flex-wrap: wrap;
         }
+        .schedule-header-node {
+            background-color: gray;
+            /* NODE WIDTH DEFINITION */
+            width:83px;
+            border: 1px solid black;
+        }
+        .schedule-header-node a {
+            color: white;
+            padding-left: 4px;
+        }
         .schedule-node {
             background-color: lightgray;
             /* NODE WIDTH DEFINITION */
             width:83px;
             height:83px;
             border: 1px solid black;
+        }
+        .schedule-node.today {
+            background-color: green !important;
+        }
+
+        .schedule-node.today a {
+            color: white !important;
         }
 
         scheduler-node {
@@ -141,9 +158,16 @@
             //dispatch();
             const throttledDispatch = _.throttle(dispatch, 16);
             document.addEventListener("mousemove", (e) => {
-                if (window.schedule.display.expanded)
+                if (!window.schedule.display.expanded)
                     return;
-                //throttledDispatch();
+                if (
+                    !window.schedule.click &&
+                    !window.schedule.display.nativePickerClick
+                )
+                {
+                    window.schedule.hover = { x: e.clientX, y: e.clientY };
+                    throttledDispatch();
+                }
                 /*window.schedule.hover = { x: e.clientX, y: e.clientY };
                 window.schedule.click = 0;
                 throttledDispatch();*/
