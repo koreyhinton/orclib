@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <link rel="stylesheet" href="https://unpkg.com/missing.css@1.2.0">
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4/lodash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4/lodash.min.js"></script>
+    <style>
+
+        body {
+            font-family: "Ubuntu", "Source Sans 3", "Source Sans Pro", -apple-system, system-ui, sans-serif;
+            font-weight: 400;
+            font-size: 16px;
+        }
+    </style>
+    <script type="module" src="s3-player.js"></script>
+    <script>
+
+        // JUST DEMO EXAMPLE, REAL USAGE WOULD BE SERVER-GENERATED
+        window.s3media = [
+            {
+                url: "https://upload.wikimedia.org/wikipedia/commons/e/e4/12-07-13-washington-by-RalfR-08.jpg"
+            },
+            {
+                url: "https://upload.wikimedia.org/wikipedia/commons/6/69/La_presa_di_Roma_%281905%29.webm"
+            }
+        ];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            window.s3player(window.s3playerData);
+
+            function dispatch() {
+                window.s3player(window.s3playerData);
+            };
+
+            const throttledDispatch = _.throttle(dispatch, 3);
+            document.addEventListener("mousemove", (e) => {
+                if (
+                    !window.s3playerData.mouse.click
+                )
+                {
+                    window.s3playerData.mouse.x = e.clientX;
+                    window.s3playerData.mouse.y = e.clientY;
+                    throttledDispatch();
+                }
+            });
+            document.addEventListener("click", (e) => {
+                window.s3playerData.mouse.click = 1;
+                dispatch();
+                window.s3playerData.mouse.click = 0;
+            });
+        });
+    </script>
+    </head>
+    <body>
+        <div id="main">
+            <h1>DEMO</h1>
+            <p>
+            The s3-player div abstracts a real media player and basically guards it with an additional play button to protect against accidentally incurred charges from s3 media file loading.
+            </p>
+            <p>
+            These are not s3 files, but in your own backend-generated html file you can populate the window.s3media object with expiring/signed s3 urls and include the s3-player module.
+            </p>
+            <div id="s3-player"></div>
+        </div>
+    </body>
+</html>
