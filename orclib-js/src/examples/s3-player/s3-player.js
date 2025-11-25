@@ -4,7 +4,7 @@
 import { and, not, commandQuery, commandQueryConfig } from '../../orc.js';
 import { rectCheck } from './rect-check.js';
 
-((strict) => {commandQueryConfig.strictMode = strict; window.s3player = function(s) {
+((strict) => {commandQueryConfig.strictMode = strict; window.s3player = function(s, uplDtFreqMap, uploadApi) {
 
 
 // INITIALIZE
@@ -15,9 +15,11 @@ commandQuery(
             width: 380,
             height: 400,
             index: 0,
-            unlocked: 0
+            unlocked: 0,
+            uplDtFreqMap: uplDtFreqMap,
+            uploadApi: uploadApi
         };
-        window.s3playerData = s; 
+        window.s3playerData = s;
 
         let s3player = document.getElementById("s3-player");
         s3player.style.position = "relative";
@@ -66,7 +68,6 @@ commandQuery(
         s3player.appendChild(img);
 
         let footer = document.createElement("div");
-        footer.innerHTML = "$ S3 Player";
         footer.style.color = "white";
         footer.style.backgroundColor = "darkgray";
         footer.style.width = s.width + "px";
@@ -77,6 +78,15 @@ commandQuery(
         footer.style.paddingLeft = "8px";
         footer.style.zIndex = 1;
         s3player.appendChild(footer);
+
+        let footerText = document.createElement("a");
+        footerText.id = "s3playerfootertext";
+        let pathComponents = window.s3media[s.index].url.split("/");
+        let fileName = pathComponents[pathComponents.length - 1];
+        let gb = window.s3media[s.index].bytes/(1024*1024*1024);
+        footerText.innerHTML
+            = ("S3 Player $" + (gb.toFixed(2))  + "GB .. " + fileName.slice(-16));
+        footer.appendChild(footerText);
 
         let countView = document.createElement("span");
         countView.innerHTML = `${s.index+1} of ${window.s3media.length}`;
@@ -90,6 +100,30 @@ commandQuery(
         countView.style.borderLeft = "1px solid black";
         footer.style.border = "1px solid black";
         footer.appendChild(countView);
+
+        let uploadDateView = document.createElement("div");
+        uploadDateView.id = "s3playeruploaddate";
+        uploadDateView.style.position = "absolute";
+        uploadDateView.style.bottom = "24px";
+        uploadDateView.style.left = "4px";
+        uploadDateView.style.color = "white";
+        uploadDateView.style.textDecoration = "italic";
+        uploadDateView.innerHTML
+            = "Uploaded: " + window.s3media[s.index].uploadDate +
+            ` (${s.uplDtFreqMap[window.s3media[s.index].uploadDate]})`;
+        s3player.appendChild(uploadDateView);
+
+        let addButton = document.createElement("div");
+        addButton.id = "s3playeraddbutton";
+        addButton.innerHTML = "Upload photo or video";
+        addButton.style.color = "white";
+        addButton.style.backgroundColor = "green";
+        addButton.style.position = "absolute";
+        addButton.style.left = "0";
+        addButton.style.top = s.height + "px";
+        addButton.style.width = s.width + "px";
+        addButton.style.padding = "8px";
+        s3player.appendChild(addButton);
 
         s3player.style.width = s.width + "px";
         s3player.style.backgroundColor = "black";
@@ -177,6 +211,14 @@ commandQuery(
         document.getElementById("s3playercountview").innerHTML
             = `${s.index+1} of ${window.s3media.length}`;
         document.getElementById("s3playerplay").style.visibility = "visible";
+        let pathComponents = s.media[s.index].url.split("/");
+        let gb = s.media[s.index].bytes/(1024*1024*1024);
+        let fileName = pathComponents[pathComponents.length - 1];
+        document.getElementById("s3playerfootertext").innerHTML
+            = ("S3 Player $" + (gb.toFixed(2))  + "GB .. " + fileName.slice(-16));
+        document.getElementById("s3playeruploaddate").innerHTML
+            = "Uploaded: " + s.media[s.index].uploadDate +
+            ` (${s.uplDtFreqMap[s.media[s.index].uploadDate]})`;
     },
 
     (
@@ -188,9 +230,30 @@ commandQuery(
         document.getElementById("s3playercountview").innerHTML
             = `${s.index+1} of ${window.s3media.length}`;
         document.getElementById("s3playerplay").style.visibility = "visible";
+        let pathComponents = s.media[s.index].url.split("/");
+        let gb = s.media[s.index].bytes/(1024*1024*1024);
+        let fileName = pathComponents[pathComponents.length - 1];
+        document.getElementById("s3playerfootertext").innerHTML
+            = ("S3 Player $" + (gb.toFixed(2))  + "GB .. " + fileName.slice(-16));
+        document.getElementById("s3playeruploaddate").innerHTML
+            = "Uploaded: " + s.media[s.index].uploadDate +
+            ` (${s.uplDtFreqMap[s.media[s.index].uploadDate]})`;
     }
 
 );
+
+// UPLOAD CLICK
+
+commandQuery(
+    (
+        s.mouse.click &&
+        rectCheck(s.mouse.x, s.mouse.y, "s3playeraddbutton")
+    ), () => {
+        s.uploadApi("mybucket") // todo: actually upload a file with a real signedUrl
+            .then((signedUrl) => {var fi = document.createElement("input"); fi.type = "file"; fi.click(); console.log("done", signedUrl)});
+    }
+);
+
 
 // CURSOR MONEY-COST HINT
 commandQuery(

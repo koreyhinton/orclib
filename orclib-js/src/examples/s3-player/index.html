@@ -3,7 +3,6 @@
     <head>
     <link rel="stylesheet" href="https://unpkg.com/missing.css@1.2.0">
     <script src="https://cdn.jsdelivr.net/npm/lodash@4/lodash.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4/lodash.min.js"></script>
     <style>
 
         body {
@@ -15,18 +14,51 @@
     <script type="module" src="s3-player.js"></script>
     <script>
 
-        // JUST DEMO EXAMPLE, REAL USAGE WOULD BE SERVER-GENERATED
+        // THIS IS JUST A DEMO EXAMPLE, A REAL USAGE WOULD BE SERVER-GENERATED
+        // AND SHOULD SEND IT BACK IN DESC UPLOAD DATE ORDER
         window.s3media = [
             {
-                url: "https://upload.wikimedia.org/wikipedia/commons/e/e4/12-07-13-washington-by-RalfR-08.jpg"
+                url: "https://upload.wikimedia.org/wikipedia/commons/e/e4/12-07-13-washington-by-RalfR-08.jpg",
+                bytes: 7119474,
+                uploadDate: "01/11/2024"
             },
             {
-                url: "https://upload.wikimedia.org/wikipedia/commons/6/69/La_presa_di_Roma_%281905%29.webm"
+                url: "https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg",
+                bytes: 5921471,
+                uploadDate: "01/11/2024"
+            },
+            {
+                url: "https://upload.wikimedia.org/wikipedia/commons/6/69/La_presa_di_Roma_%281905%29.webm",
+                bytes: 28633368,
+                uploadDate: "01/12/2024"
+            },
+            {
+                url: "https://upload.wikimedia.org/wikipedia/commons/transcoded/f/f4/Demo_Video_Tutorial.webm/Demo_Video_Tutorial.webm.720p.vp9.webm",
+                bytes: 13295164,
+                uploadDate: "01/12/2024"
+            },
+            {
+                url: "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/cc/Explaining_Uniform_Resource_Locator.webm/Explaining_Uniform_Resource_Locator.webm.720p.vp9.webm",
+                bytes: 10892872,
+                uploadDate: "01/12/2024"
             }
         ];
 
         document.addEventListener("DOMContentLoaded", () => {
-            window.s3player(window.s3playerData);
+            let uplDtFreqMap = {};
+            for (const media of window.s3media) {
+                if (uplDtFreqMap[media.uploadDate])
+                    uplDtFreqMap[media.uploadDate]++;
+                else
+                    uplDtFreqMap[media.uploadDate] = 1;
+            }
+
+            let signedUrlUploadApi = (bucket) => {
+                // todo: add real intermediate api endpoint that returns the signed s3 url
+                return Promise.resolve(`https://${bucket}.s3.amazonaws.com?AWSAccessKeyId=foo&Expires=bar&Signature=baz`);
+            }; // mock url example
+
+            window.s3player(window.s3playerData, uplDtFreqMap, signedUrlUploadApi);
 
             function dispatch() {
                 window.s3player(window.s3playerData);
@@ -59,6 +91,9 @@
             </p>
             <p>
             These are not s3 files, but in your own backend-generated html file you can populate the window.s3media object with expiring/signed s3 urls and include the s3-player module.
+            </p>
+            <p>
+            The upload feature is also not fully implemented, but it wouldn't be too hard to plug in your own real endpoint, assuming you have one, that can give you back a temporary (expiring) signed upload url from s3.
             </p>
             <div id="s3-player"></div>
         </div>
