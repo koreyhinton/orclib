@@ -28,7 +28,7 @@ commandQuery(
         playButton.src = "https://upload.wikimedia.org/wikipedia/commons/9/93/Gnome-media-playback-start.svg";
         playButton.style.position = "absolute";
         playButton.style.left = (s.width/2 - 48/2) + "px";
-        playButton.style.top = (s.width/2 - 48/2) + "px";
+        playButton.style.top = (s.height/2 - 48/2) + "px";
         playButton.id = "s3playerplay";
         s3player.appendChild(playButton);
 
