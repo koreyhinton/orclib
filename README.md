@@ -6,3 +6,6 @@ Linear Code Flow Orchestration library
 
 # Command Query
 <img width="1459" height="840" alt="commandQuery" src="https://github.com/user-attachments/assets/6dae2736-e216-48fa-a392-ab8911ab0353" />
+
+# Frozen Expression
+<img width="1430" height="458" alt="frozenexpression" src="https://github.com/user-attachments/assets/2b075d85-cabe-4366-ae99-275faee86c6f" />
