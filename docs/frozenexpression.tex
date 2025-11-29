@@ -1,0 +1,49 @@
+\documentclass[letterpaper]{article}
+\usepackage{tempora}%\usepackage{libertinus}%\usepackage{lmodern}
+\usepackage{multicol}
+\pagestyle{plain}
+\usepackage{microtype}
+\usepackage[breakable]{tcolorbox}
+\usepackage{fullpage}
+\usepackage{fullwidth}
+\usepackage{color}
+\usepackage{amsmath}
+%\usepackage{titlesec}
+
+\usepackage[hidelinks,colorlinks=true,urlcolor=blue]{hyperref}
+
+%\titlespacing\subsection{0pt}{12pt plus 4pt minus 2pt}{2pt plus 2pt minus 2pt}
+
+\DisableLigatures{encoding = *, family = *}
+\pagenumbering{gobble}
+
+\newenvironment{location}{\color{gray}}  %{\ignorespacesafterend}
+
+\begin{document}
+\begin{fullwidth}[width=\linewidth+2cm]%[width=\linewidth+2cm]
+\begin{center}
+\subsection*{Orc Library Command Query Code Flow Structure}
+\vspace{3pt}
+\end{center}
+\noindent
+
+  \subsection*{Frozen Expression}
+
+    A frozen expression defines a boolean expression for a heavy compute that
+    will only be evaluated once and will retain the first and only evaluated
+    value on subsequent evaluations.
+
+    \begin{equation*}
+    \begin{aligned}
+        & withFrozenExpression \bigl((e) \Rightarrow \{ \\
+        & \ \ \ \ lazyExpVar = e(() \Rightarrow \beta) \\
+        & \ \ \ \ commandQuery \bigl( \\
+        & \ \ \ \ \ \ \ \ \beta_1 \ and \ lazyExpVar(), \ ()\;\Rightarrow\;\{ \ \varsigma_1 \ \}, \\
+        & \ \ \ \ \ \ \ \ \beta_2 \ and \ lazyExpVar(), \ ()\;\Rightarrow\;\{ \ \varsigma_1 \ \}, \\
+        & \ \ \ \ \ \ \ \ ... \\
+        & \} \bigr)
+    \end{aligned}
+    \end{equation*}
+
+\end{fullwidth}
+\end{document}
