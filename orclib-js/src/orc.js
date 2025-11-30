@@ -50,3 +50,4 @@ export const as0 = function(num) {
 export { orcCommandQuery as commandQuery } from './commandQuery.js';
 export { orcCommandQueryConfig as commandQueryConfig } from './commandQuery.js';
 export const parallelCollection = orcParallelCollection;
+export const withFrozenExpression = orcWithFrozenExpression;
