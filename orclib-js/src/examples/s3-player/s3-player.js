@@ -1,7 +1,7 @@
 // START OF LITERATE PROGRAM FILE
 // Wik-mode can be used in emacs to expand/collapse sections.
 
-import { and, not, commandQuery, commandQueryConfig } from '../../orc.js';
+import { and, not, commandQuery, commandQueryConfig, withFrozenExpression } from '../../orc.js';
 import { rectCheck } from './rect-check.js';
 
 ((strict) => {commandQueryConfig.strictMode = strict; window.s3player = function(s, uplDtFreqMap, uploadApi) {
@@ -12,7 +12,7 @@ commandQuery(
     !s, () => {
         s = {
             mouse: { x: -1, y: -1, click: 0 },
-            width: 380,
+            width: 950,//380,
             height: 400,
             index: 0,
             unlocked: 0,
@@ -21,6 +21,13 @@ commandQuery(
         };
         window.s3playerData = s;
 
+        s.getMediaType = function(url) {
+            const ext = url.split('?')[0].toLowerCase();
+            if (/\.(jpg|jpeg|png|gif|bmp|webp|heic)$/.test(ext)) return "image";
+            if (/\.(mp4|mov|webm|mkv|avi)$/.test(ext)) return "video";
+            return "unknown";
+        };
+
         let s3player = document.getElementById("s3-player");
         s3player.style.position = "relative";
 
@@ -28,7 +35,7 @@ commandQuery(
         playButton.src = "https://upload.wikimedia.org/wikipedia/commons/9/93/Gnome-media-playback-start.svg";
         playButton.style.position = "absolute";
         playButton.style.left = (s.width/2 - 48/2) + "px";
-        playButton.style.top = (s.width/2 - 48/2) + "px";
+        playButton.style.top = (s.height/2 - 48/2) + "px";
         playButton.id = "s3playerplay";
         s3player.appendChild(playButton);
 
@@ -64,6 +71,7 @@ commandQuery(
         img.style.left = "50%";
         img.style.top = "50%";
         img.id = "s3playerimg";
+        img.style.objectFit = "contain";
         img.style.transform = "translate(-50%, -50%)";
         s3player.appendChild(img);
 
@@ -81,11 +89,11 @@ commandQuery(
 
         let footerText = document.createElement("a");
         footerText.id = "s3playerfootertext";
-        let pathComponents = window.s3media[s.index].url.split("/");
-        let fileName = pathComponents[pathComponents.length - 1];
-        let gb = window.s3media[s.index].bytes/(1024*1024*1024);
+        let pathComponents = window.s3media?.[s.index]?.url.split("/");
+        let fileName = pathComponents?.[pathComponents.length - 1];
+        let gb = (window.s3media?.[s.index]?.bytes ?? 0)/(1024*1024*1024);
         footerText.innerHTML
-            = ("S3 Player $" + (gb.toFixed(2))  + "GB .. " + fileName.slice(-16));
+            = ("S3 Player $" + (gb?.toFixed(2))  + "GB .. " + fileName?.split("?")[0].slice(-36));
         footer.appendChild(footerText);
 
         let countView = document.createElement("span");
@@ -109,13 +117,12 @@ commandQuery(
         uploadDateView.style.color = "white";
         uploadDateView.style.textDecoration = "italic";
         uploadDateView.innerHTML
-            = "Uploaded: " + window.s3media[s.index].uploadDate +
-            ` (${s.uplDtFreqMap[window.s3media[s.index].uploadDate]})`;
+            = "Uploaded: " + (window.s3media?.[s.index]?.uploadDate || '-') +
+            ((window.s3media?.[s.index] || false) ? ` (${s.uplDtFreqMap[window.s3media?.[s.index]?.uploadDate]})` : '-');
         s3player.appendChild(uploadDateView);
 
         let addButton = document.createElement("div");
         addButton.id = "s3playeraddbutton";
-        addButton.innerHTML = "Upload photo or video";
         addButton.style.color = "white";
         addButton.style.backgroundColor = "green";
         addButton.style.position = "absolute";
@@ -124,6 +131,19 @@ commandQuery(
         addButton.style.width = s.width + "px";
         addButton.style.padding = "8px";
         s3player.appendChild(addButton);
+
+        let addButtonText = document.createElement("a");
+        addButtonText.id = "s3playeraddbuttontext";
+        addButtonText.innerHTML = "Upload photo or video";
+        addButton.appendChild(addButtonText);
+
+        let methodSelect = document.createElement("select");
+        methodSelect.innerHTML = "<option value=''></option><option value='CIPH'>CIPH</option><option value='KIPH'>KIPH</option><option value='PSHT'>PSHT</option><option value='CLPX'>CLPX</option><option value='AKSO'>AKSO</option><option value='EVERG'>EVERG</option>";
+        methodSelect.id = "s3playermethodselect";
+        methodSelect.style.position = "absolute";
+        methodSelect.style.right = "0";
+        methodSelect.style.bottom = "0";
+        addButton.appendChild(methodSelect);
 
         s3player.style.width = s.width + "px";
         s3player.style.backgroundColor = "black";
@@ -143,7 +163,7 @@ commandQuery(
         s.media = window.s3media;
     },
 
-    window.s3media.length > 0 &&
+    /*window.s3media.length > 0 &&*/
     !s, () => {
         let s3player = document.getElementById("s3-player");
         let leftArrow = document.createElement("button");
@@ -156,12 +176,18 @@ commandQuery(
         rightArrow.style.position = "absolute";
         leftArrow.style.left = "2px";
         rightArrow.style.right = "2px";
-        leftArrow.style.top = (s.height / 2) + "px";
-        rightArrow.style.top = (s.height / 2) + "px";
-        leftArrow.style.padding = "4px 8px 4px 8px";
-        leftArrow.style.borderRadius = "20px";
-        rightArrow.style.padding = "4px 8px 4px 8px";
-        rightArrow.style.borderRadius = "20px";
+        leftArrow.style.top = (s.height / 2.0 - 64 / 2.0) + "px";
+        rightArrow.style.top = (s.height / 2.0 - 64 / 2.0) + "px";
+        //leftArrow.style.padding = "4px 8px 4px 8px";
+        leftArrow.style.width  = "64px";
+        leftArrow.style.height = "64px";
+        //leftArrow.style.borderRadius = "20px";
+        leftArrow.style.borderRadius = "50%";
+        //rightArrow.style.padding = "4px 8px 4px 8px";
+        rightArrow.style.width  = "64px";
+        rightArrow.style.height = "64px";
+        //rightArrow.style.borderRadius = "20px";
+        rightArrow.style.borderRadius = "50%";
         rightArrow.style.backgroundColor = "white";
         leftArrow.style.backgroundColor = "white";
         leftArrow.id = "s3playerleftarrow";
@@ -215,7 +241,7 @@ commandQuery(
         let gb = s.media[s.index].bytes/(1024*1024*1024);
         let fileName = pathComponents[pathComponents.length - 1];
         document.getElementById("s3playerfootertext").innerHTML
-            = ("S3 Player $" + (gb.toFixed(2))  + "GB .. " + fileName.slice(-16));
+            = ("S3 Player $" + (gb.toFixed(2))  + "GB .. " + fileName.split("?")[0].slice(-36));
         document.getElementById("s3playeruploaddate").innerHTML
             = "Uploaded: " + s.media[s.index].uploadDate +
             ` (${s.uplDtFreqMap[s.media[s.index].uploadDate]})`;
@@ -234,7 +260,7 @@ commandQuery(
         let gb = s.media[s.index].bytes/(1024*1024*1024);
         let fileName = pathComponents[pathComponents.length - 1];
         document.getElementById("s3playerfootertext").innerHTML
-            = ("S3 Player $" + (gb.toFixed(2))  + "GB .. " + fileName.slice(-16));
+            = ("S3 Player $" + (gb.toFixed(2))  + "GB .. " + fileName.split("?")[0].slice(-36));
         document.getElementById("s3playeruploaddate").innerHTML
             = "Uploaded: " + s.media[s.index].uploadDate +
             ` (${s.uplDtFreqMap[s.media[s.index].uploadDate]})`;
@@ -244,15 +270,58 @@ commandQuery(
 
 // UPLOAD CLICK
 
+withFrozenExpression((e) => {
+
+
+    const selectElement = e(() => document.getElementById("s3playermethodselect"));
+
+    const isMethodSelected = e(() => {
+        const el = selectElement();
+        const selectedIdx = el.selectedIndex;
+        return selectedIdx < 0 ? false : el.options[selectedIdx].value.length > 0;
+    });
+
+    const methodNotActive = e(() => document.activeElement !== selectElement());
+
 commandQuery(
     (
         s.mouse.click &&
+        methodNotActive() &&
+        isMethodSelected() &&
         rectCheck(s.mouse.x, s.mouse.y, "s3playeraddbutton")
     ), () => {
-        s.uploadApi("mybucket") // todo: actually upload a file with a real signedUrl
-            .then((signedUrl) => {var fi = document.createElement("input"); fi.type = "file"; fi.click(); console.log("done", signedUrl)});
+        document.getElementById("s3playeraddbuttontext").innerHTML = ". . .";
+        var fi = document.createElement("input"); fi.type = "file";
+        fi.multiple = true;
+        fi.addEventListener("cancel", () => {
+            document.getElementById("s3playeraddbuttontext").innerHTML = "Upload photo or video";
+        });
+        fi.addEventListener("change", async (e) => {
+            const createMethod = selectElement().options[selectElement().selectedIndex].value;
+//            console.log(e);
+//            console.log(e.value);
+            const uploads = Array.from(fi.files).map(file => s.uploadApi(file.name, file, createMethod));
+            Promise.all(uploads).then(results => {
+                document.getElementById("s3playeraddbuttontext").innerHTML = "Upload photo or video";
+                console.log("all done:", results);
+            });
+
+/*
+            for (var i=0; i < fi.files.length; i++) {
+                console.log(fi.files[i].name);
+                s.uploadApi(fi.files[i].name, fi.files[i]);
+            }
+*/
+            //console.log(e.target.value);
+            //console.log(fi.files);
+        });
+        fi.click();
+        //s.uploadApi() // todo: actually upload a file with a real signedUrl
+        //    .then((signedUrl) => {});
     }
 );
+
+});
 
 
 // CURSOR MONEY-COST HINT
@@ -302,24 +371,24 @@ commandQuery(
 // PLAYER UPDATES - UNLOCK
 commandQuery(
 
-    s.unlocked && s.media[s.index].url.endsWith("webm") &&
+    s.unlocked && (s.getMediaType(s.media[s.index].url) == "video") &&
     document.getElementById("s3playervideo")?.src !=
     s.media[s.index].url, () => {
         document.getElementById("s3playervideo").src = s.media[s.index].url;
     },
 
-    s.unlocked && s.media[s.index].url.endsWith("jpg") &&
+    s.unlocked && (s.getMediaType(s.media[s.index].url) == "image") &&
     document.getElementById("s3playerimg")?.src !=
     s.media[s.index].url, () => {
         document.getElementById("s3playerimg").src = s.media[s.index].url;
     },
 
-    s.unlocked && s.media[s.index].url.endsWith("webm"), () => {
+    s.unlocked && (s.getMediaType(s.media[s.index].url) == "video"), () => {
         document.getElementById("s3playervideo").style.visibility = "visible";
         document.getElementById("s3playerimg").style.visibility = "hidden";
     },
 
-    s.unlocked && s.media[s.index].url.endsWith("jpg"), () => {
+    s.unlocked && (s.getMediaType(s.media[s.index].url) == "image"), () => {
         document.getElementById("s3playerimg").style.visibility = "visible";
         document.getElementById("s3playervideo").style.visibility = "hidden";
     },

@@ -1,6 +1,7 @@
 // import { orcModule, orcModuleSeq, orcModuleDef } from './module.js';
 import { orcParallelCollection } from './parallelCollection.js';
 import { orcCommandQuery, orcCommandQueryConfig } from './commandQuery.js';
+import { orcWithFrozenExpression } from './frozenExpression.js';
 
 export const orc = {
     /*module: orcModule,
@@ -8,7 +9,8 @@ export const orc = {
     moduleDef: orcModuleDef,*/
     parallelCollection: orcParallelCollection,
     commandQueryConfig: orcCommandQueryConfig,
-    commandQuery: orcCommandQuery
+    commandQuery: orcCommandQuery,
+    withFrozenExpression: orcWithFrozenExpression
 };
 
 export const and = function(...operands) {
@@ -48,3 +50,4 @@ export const as0 = function(num) {
 export { orcCommandQuery as commandQuery } from './commandQuery.js';
 export { orcCommandQueryConfig as commandQueryConfig } from './commandQuery.js';
 export const parallelCollection = orcParallelCollection;
+export const withFrozenExpression = orcWithFrozenExpression;
