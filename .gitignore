@@ -8,3 +8,5 @@
 *.aux
 *.out
 *.pdf
+
+node_modules/

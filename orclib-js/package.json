@@ -1,0 +1,17 @@
+{
+  "name": "orclib",
+  "version": "0.0.1",
+  "description": "orc lib js",
+  "main": "src/orc.js",
+  "scripts": {
+    "s3demo": "node src/examples/s3-player/simulated-backend/server-sim.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Korey Hinton",
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.2.1"
+  }
+}
