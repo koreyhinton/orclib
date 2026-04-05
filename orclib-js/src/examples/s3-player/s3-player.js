@@ -143,6 +143,11 @@ commandQuery(
         methodSelect.style.position = "absolute";
         methodSelect.style.right = "0";
         methodSelect.style.bottom = "0";
+        methodSelect.addEventListener("change", (event) => {
+            if (null != event.target.value) {
+                localStorage.setItem("fj_create_method", event.target.value);
+            }
+        });
         addButton.appendChild(methodSelect);
 
         s3player.style.width = s.width + "px";
@@ -267,6 +272,26 @@ commandQuery(
     }
 
 );
+
+// CAMERA BLOB UPLOAD
+withFrozenExpression((e) => {
+
+    const createMethod = e(() => localStorage.getItem("fj_create_method"));
+
+commandQuery(
+    !!s.snap, () => {
+        document.getElementById("s3playeraddbuttontext").innerHTML = ". . .";
+        var file = window.cameraObj.file;
+        s.uploadApi(file.name, file, createMethod())
+            .then(result => {
+                document.getElementById("s3playeraddbuttontext").innerHTML = "Upload photo or video";
+                console.log("all done:", result);
+                window.cameraObj.file = null;
+            })
+    }
+);
+
+});
 
 // UPLOAD CLICK
 
