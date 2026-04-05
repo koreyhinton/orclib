@@ -138,7 +138,7 @@ commandQuery(
         addButton.appendChild(addButtonText);
 
         let methodSelect = document.createElement("select");
-        methodSelect.innerHTML = "<option value=''></option><option value='CIPH'>CIPH</option><option value='KIPH'>KIPH</option><option value='PSHT'>PSHT</option><option value='CLPX'>CLPX</option><option value='AKSO'>AKSO</option><option value='EVERG'>EVERG</option>";
+        methodSelect.innerHTML = "<option value=''></option><option value='CIPH'>CIPH</option><option value='KIPH'>KIPH</option><option value='PSHT'>PSHT</option><option value='CLPX'>CLPX</option><option value='AKSO'>AKSO</option><option value='EVERG'>EVERG</option><option value='SCHL'>SCHL</option>";
         methodSelect.id = "s3playermethodselect";
         methodSelect.style.position = "absolute";
         methodSelect.style.right = "0";
