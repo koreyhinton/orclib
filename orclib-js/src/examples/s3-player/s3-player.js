@@ -284,9 +284,17 @@ commandQuery(
         var file = window.cameraObj.file;
         s.uploadApi(file.name, file, createMethod())
             .then(result => {
-                document.getElementById("s3playeraddbuttontext").innerHTML = "Upload photo or video";
+                // result is bool (response.result.ok)
+                if (!!s.test)
+                    setTimeout(()=>{document.getElementById("s3playeraddbuttontext").innerHTML = "Upload photo or video";}, 3000); // mock an upload
+                else
+                    document.getElementById("s3playeraddbuttontext").innerHTML = "Upload photo or video";
                 console.log("all done:", result);
-                window.cameraObj.file = null;
+                document.dispatchEvent(new CustomEvent("cameraupload", {
+                    detail: { ok: result },
+                    bubbles: true,
+                    cancelable: true
+                }));
             })
     }
 );
