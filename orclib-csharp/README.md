@@ -28,3 +28,105 @@ This research builds on prior work built into my JavaScript orchestration librar
 The name commandQuery is ambiguous, and its functionality, to restructure control flow, might be too unexpected and it is unlikely to recognize (bool,lambda,...) pairs as if statements with a delayed then statement.
 
 If instead, we push the access control into a more expected place, like accessor methods, and allow regular if statements, then engineers need to only understand the encapsulator's access mechanics, not a new control flow structure.
+
+## HYPOTHESIS
+
+If an OOP object encapsulator class uses access control to restrict read to only ever be a copy of the original object value, and write to happen only once and affects the original reference, then the following will be true:
+
+1) Code accessing the object only via the encapsulator cannot observe intermediate states
+
+2) Code that bypasses the encapsulator or must use the mutation can be identified by the code maintainer through:
+    a) Contrast to safer surrounding code (encapsulator or method boundaries)
+    b) Custom Roslyn analyzer warnings
+
+3) Code structured as multiple if-getter statements can be re-ordered in any order without change in behavior in that scope
+    a) additionally, strictly checking via encapsulator makes for re-orderable statements, and fully-qualifiable if-getter statements without further nesting and local referencing to aid maintainability
+
+## TEST
+
+Psuedocode
+
+```
+public ref struct Frozen<T> where T : struct
+{
+    private ref T _original;
+    private readonly T _copy;
+    private bool _once;
+    public Frozen(ref T original)
+    {
+        _original = ref original;
+        _copy = original;
+        _once = false;
+    }
+    public T Val
+    {
+        get { return _copy; };
+        set
+        {
+            if(!_once)
+            {
+                _original = newValue;
+                _once = true;
+            }
+        }
+    }
+}
+```
+
+Test code
+
+```
+bool acceptPassword;
+int i = 0;
+LengthCheck(new Frozen<bool>(ref acceptPassword), new Frozen<int>(ref i)); /* 1 */
+NumberCheck(new Frozen<bool>(ref acceptPassword), new Frozen<int>(ref i)); /* 2 */
+// 1,2 are re-orderable. In each method, A,B,C are re-orderable too.
+
+void CheckLength(Frozen<bool> frozenAccept, Frozen<int> checkIteration)
+{
+    /* A */
+    if (checkIteration.Val > 0 && frozenAccept.Val)
+    {
+        frozenAccept.Val = this.password.Length > 14;
+    }
+
+    /* B */
+    if (checkIteration.Val == 0)
+    {
+        frozenAccept.Val = this.password.Length > 14;
+    }
+
+    /* C */
+    checkIteration.Val++;
+}
+
+/* 2 */
+void CheckNumber(Frozen<bool> frozenAccept, Frozen<int> checkIteration)
+{
+    /* A */
+    if (checkIteration.Val > 0 && frozenAccept.Val)
+    {
+        frozenAccept.Val = Regex.IsMatch(this.password, @"\d");
+    }
+
+    /* B */
+    if (checkIteration.Val == 0)
+    {
+        frozenAccept.Val = Regex.IsMatch(this.password, @"\d");
+    }
+
+    /* C */
+    checkIteration.Val++;
+}
+```
+
+Test cases
+
+
+| Case  | Expected  | Actual |
+| password="test" anyOrder[CheckLength,CheckNumber] anyOrder[A,B,C] | i=2,accept=false | |
+| password="test1" anyOrder[CheckLength,CheckNumber] anyOrder[A,B,C] | i=2,accept=false | |
+| password="test__test__test" anyOrder[CheckLength,CheckNumber] anyOrder[A,B,C] | i=2,accept=false | |
+| password="123456789012345" anyOrder[CheckLength,CheckNumber] anyOrder[A,B,C] | i=2,accept=true | |
+
+

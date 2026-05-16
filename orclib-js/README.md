@@ -4,15 +4,26 @@ Look for a mechanism that restricts the same web style being defined in multiple
 
 ## QUESTION
 
-Can an element's declared style in static HTML (whether inline or via a css class) serve as the single source of truth for the web element's original or load state?
+Is there a way to statically declare the original styles (whether inline or via class names) in html for an element, and then be able to reapply those original styles after they dynamically change, undoing all the dynamic changes, with minimal syntax, without losing other static style sheet changes (ie: that were defined by other means, tag name, id, hierarchical selection, etc)? The style declarations will serve as a single source of truth, such that even refactoring a simple class reference, to rename the class itself, will not result in having to change both a static (html) and dynamic (JavaScript) reapplication reference.
 
-To understand why this matters, let me detail out a scenario where a sleeping element becomes awake. Usually an element has more than 2 states, but for this example we just need to consider 2 states: asleep and awake.
+## BACKGROUND RESEARCH
 
-On load the element is sleeping and hidden with an inline style `visibility:hidden`. Knowing that the element can be re-hidden (and go back to sleep), you immediately put the code into a class stylesheet instead. You are then surprised to see while testing the code that even when hidden the element is taking up space and even preventing other elements from receiving click events. 
+Having a single source of truth for the dual purpose of initial load and reset style is possible when the load and reset styles are all done dynamically in scripts, but is not commonly done from a static html basis.
 
-So now you decide to refactor to use a style of `display:none` to fix the space issue, which is no problem at all, because you used a class and you can just change it in the style sheet and you are done. But, this gives a false sense of security because the code is still referenced in two places: the static HTML element and in the JavaScript that resets it again.
+There are common approaches in static html that help reduce code, like factoring styles out stylesheets with class/attribute/ID reference tagging, but the problem of duplicate reference on refactor is still there.
 
-After a while you then decide the class name is confusing and want to change it to a better name, and logically it makes sense that there is only one state of the style and you'd expect it's reference to exist in but one place, so you go looking for its one usage location in addition to the style definition and make the change. But now when you run the code it no longer works since the second reference location is still using the old name.
+Modern frameworks may combine static and dynamic rendering in a single function, which could be useful for this purpose by factoring the tag into a dynamic variable, yet that comes at a cost of indirection for every element and would not be common practice.
 
-So the question really is, can we eliminate the second style reference entirely?
+## HYPOTHESIS
+
+If an element's styles and class references are statically defined within an unrendered** attribute for use as a load and reset basis for a transition handler function, then the following is expected to be true:
+
+1) No class name or style is duplicated for reset since the unrendered attribute will be used and its naming convention is owned by the transition handler
+
+2) All dynamic changes to rendered* attributes will be unwound on reset
+
+3) Static stylesheet definitions persist across load and reset states, unaffected by the transition handler
+
+* rendered attributes: `style`, `class`
+** unrendered attributes: require transition handler mapping to rendered attributes
 
