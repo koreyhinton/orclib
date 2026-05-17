@@ -2,7 +2,6 @@
 import { orcParallelCollection } from './parallelCollection.js';
 import { orcCommandQuery, orcCommandQueryConfig } from './commandQuery.js';
 import { orcWithFrozenExpression } from './frozenExpression.js';
-import { styleOnLoad } from './styleOnLoad.js';
 
 export const orc = {
     /*module: orcModule,
@@ -11,8 +10,7 @@ export const orc = {
     parallelCollection: orcParallelCollection,
     commandQueryConfig: orcCommandQueryConfig,
     commandQuery: orcCommandQuery,
-    withFrozenExpression: orcWithFrozenExpression,
-    styleOnLoad: styleOnLoad
+    withFrozenExpression: orcWithFrozenExpression
 };
 
 export const and = function(...operands) {
@@ -53,3 +51,4 @@ export { orcCommandQuery as commandQuery } from './commandQuery.js';
 export { orcCommandQueryConfig as commandQueryConfig } from './commandQuery.js';
 export const parallelCollection = orcParallelCollection;
 export const withFrozenExpression = orcWithFrozenExpression;
+export { styleOnLoad } from './styleOnLoad.js';
