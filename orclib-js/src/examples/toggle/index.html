@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <style>
+        .closed {
+            background-color: red;
+        }
+        .open {
+            background-color: green;
+        }
+    </style>
+    <script type="module">
+        import { orc } from '/orc.js';
+        orc.styleOnLoad();
+    </script>
+    <script>
+        window.toggle = function() {
+            const box = document.getElementById("box");
+            const btn = document.getElementById("toggle");
+            if (btn.innerHTML == "Open")
+            {
+                box.classList.remove("closed");
+                box.classList.add("open");
+                box.style.width = "400px";
+                box.style.height = "400px";
+                btn.innerHTML = "Close";
+            }
+            else
+            {
+                box.dispatchEvent(new Event("re-sol"));
+                btn.innerHTML = "Open";
+            }
+        };
+    </script>
+    </head>
+    <body>
+        <div id="main">
+            <button id="toggle" onclick="toggle()">Open</button>
+            <div id="box"
+                data-solc="closed"
+                data-sols="width: 10px; height: 10px"
+            ></div>
+        </div>
+    </body>
+</html>
