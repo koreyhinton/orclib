@@ -11,12 +11,24 @@ export const styleOnLoad = () => {
 
     function elementClsSol(event) {
         const el = event.target;
-        el.setAttribute("class", el.getAttribute("data-solc"));   
+        el.setAttribute("class", el.getAttribute("data-solc"));
     }
 
     function elementStySol(event) {
         const el = event.target;
         el.setAttribute("style", el.getAttribute("data-sols"));
+    }
+
+    function elementClsUnSol(event) {
+        // undo the style on load class
+        const el = event.target;
+        el.setAttribute("class", "");
+    }
+
+    function elementStyUnSol(event) {
+        // undo the style on load styles
+        const el = event.target;
+        el.setAttribute("style", "");
     }
 
     function sol() {
@@ -27,11 +39,13 @@ export const styleOnLoad = () => {
         sty.forEach((el) => {
             elementStySol({ target: el });
             el.addEventListener("re-sol", elementStySol);
+            el.addEventListener("un-sol", elementStyUnSol);
         });
 
         cls.forEach((el) => {
             elementClsSol({ target: el });
             el.addEventListener("re-sol", elementClsSol);
+            el.addEventListener("un-sol", elementClsUnSol);
         });
     }
 

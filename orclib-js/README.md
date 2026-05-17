@@ -27,3 +27,8 @@ If an element's styles and class references are statically defined within an unr
 * rendered attributes: `style`, `class`
 ** unrendered attributes: require transition handler mapping to rendered attributes
 
+## TEST
+
+In practice, it was discovered classes added via the transition handler, will likely need to be removed in a common toggling operation, and in doing so requires referencing the class name in a place that could be renamed on naming refactor.
+
+It might be preferable to have a clear operation to clear out the load styles from the rendered attributes while still keeping unrendered cached for load style return.

@@ -19,7 +19,7 @@
             const btn = document.getElementById("toggle");
             if (btn.innerHTML == "Open")
             {
-                box.classList.remove("closed");
+                box.dispatchEvent(new Event("un-sol")); /* box.classList.remove("closed"); */
                 box.classList.add("open");
                 box.style.width = "400px";
                 box.style.height = "400px";
