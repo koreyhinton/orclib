@@ -1,0 +1,22 @@
+{
+    "Name": "TCP Port Quiz",
+    "AnswerDataType": "int",
+    "QAs": [
+        {
+            "Q": "What is the default selenium port #?",
+            "A": 4444
+        },
+        {
+            "Q": "What is the default port # for mariadb and mysql?",
+            "A": 3306
+        },
+        {
+            "Q": "What is the most commonly used port # for encrypted web server traffic (https)?",
+            "A": 443
+        },
+        {
+            "Q": "What is the most commonly used port # for unencrypted web server traffic (http)?",
+            "A": 80
+        }
+    ]
+}
