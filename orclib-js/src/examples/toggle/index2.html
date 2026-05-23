@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <style>
+        #box {
+            --load-width: 10px;
+            --load-height: 10px;
+            --load-bg: red;
+            width: var(--load-width);
+            height: var(--load-height);
+            background-color: var(--load-bg);
+        }
+        /* closed is an implicit state */
+        #box.open {
+            --load-width: 400px;
+            --load-height: 400px;
+            --load-bg: green;
+        }
+    </style>
+    <script>
+        window.toggle = function() {
+            const box = document.getElementById("box");
+            const btn = document.getElementById("toggle");
+            if (btn.innerHTML == "Open")
+            {
+                box.classList.add("open");
+                btn.innerHTML = "Close";
+            }
+            else
+            {
+                box.classList.remove("open");
+                btn.innerHTML = "Open";
+            }
+        };
+    </script>
+    </head>
+    <body>
+        <div id="main">
+            <button id="toggle" onclick="toggle()">Open</button>
+            <div id="box"></div>
+        </div>
+    </body>
+</html>
