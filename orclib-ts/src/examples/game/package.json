@@ -1,0 +1,16 @@
+{
+  "name": "game",
+  "version": "0.0.1",
+  "description": "game",
+  "scripts": {
+    "boot": "cd ../../ && tsc && cd - && ./build.sh && tsc --noEmit && vite build && vite"
+  },
+  "keywords": [],
+  "author": "Korey Hinton",
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "typescript": "^6.0.3",
+    "vite": "^8.0.14"
+  }
+}
+ 

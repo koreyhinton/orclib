@@ -1,0 +1,15 @@
+{
+  "name": "orclib",
+  "version": "0.0.1",
+  "description": "orc lib ts",
+  "main": "src/orc.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "Korey Hinton",
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}
