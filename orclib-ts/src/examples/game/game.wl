@@ -3,6 +3,7 @@
 v=${1:-index_game_}
 cat << EOF
     import { EventPoller } from '../../../src/orc.ts';
+    import { VisualLog } from '../../../src/orc.ts';
 
     window.addEventListener("DOMContentLoaded", () => {
 
@@ -15,6 +16,8 @@ cat << EOF
 
         const ${v}loop_EventCharacterKey = 'CharacterKey';
         ${v}loop_EventPoller.register(document.body, 'keyup', ${v}loop_EventCharacterKey);
+
+        const ${v}loop_Log = new VisualLog('${v}loop_log');
 
         setInterval(() => {
             ` ./game-loop.wl  ${v}loop_ `

@@ -1,2 +1,3 @@
 import { EventPoller } from "./EventPoller";
-export { EventPoller };
+import { VisualLog } from "./VisualLog";
+export { EventPoller, VisualLog };

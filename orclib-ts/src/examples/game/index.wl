@@ -33,6 +33,8 @@ cat << EOF
         <div id="${v}game_loop_Container">
             ` ./character.wl ${v}game_loop_char_  `
         </div>
+        <div id="${v}game_loop_log">
+        </div>
     </body>
 </html>
 

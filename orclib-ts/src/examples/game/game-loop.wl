@@ -7,14 +7,22 @@ cat << EOF
     // console.log("tick, ${v}Container");
     if (${v}EventPoller.polled(${v}EventCharacterKey))
     {
-        let e = ${v}EventPoller.event(${v}EventCharacterKey);
-        if (e instanceof KeyboardEvent && e.key == "ArrowRight")
+        let ${v}E = ${v}EventPoller.event(${v}EventCharacterKey);
+        if (${v}E instanceof KeyboardEvent && ${v}E.key == "ArrowRight")
         {
             ${v}char_Character.style.left = (${v}char_Character.offsetLeft + 20) + "px";
+            ${v}Log.log(
+            \`
+                <p style="color:white">you take a step to the east</p>
+            \`);
         }
-        else if (e instanceof KeyboardEvent && e.key == "ArrowLeft")
+        else if (${v}E instanceof KeyboardEvent && ${v}E.key == "ArrowLeft")
         {
             ${v}char_Character.style.left = (${v}char_Character.offsetLeft - 20) + "px";
+            ${v}Log.log(
+            \`
+                <p style="color:white">you take a step to the west</p>
+            \`);
         }
     }
 
