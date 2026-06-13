@@ -116,25 +116,27 @@ v=${1:-ktc_} # kotlin controller namespace
 # maps
 . ${NSMAP}/nsmap filePath ${v} ${v}imeta_device_ ${v}imeta_date_
 file_path=${v}FilePath
-// ...
-@RestController
-@RequestMapping("/images")
-class KotlinController() {
-    @GetMapping("/info")
-    fun info(@RequestParam filePath: String): ResponseEntity<Map<String, Any>> {
-
-        // filePath gets shared to subscripts via nsmap at top of this file
-        ` ./KotlinController-imeta-device.sh ${v}imeta_device_ `
-        ` ./KotlinController-imeta-date.sh ${v}imeta_date_ `
-        return ResponseEntity.ok(
-            mapOf(
-                "filePath" to ${!file_path},
-                "date" to ${v}imeta_date_Date, // normal non-shared namespace variable access
-                "model" to ${v}imeta_device_Model
+cat << EOF
+    // ...
+    @RestController
+    @RequestMapping("/images")
+    class KotlinController() {
+        @GetMapping("/info")
+        fun info(@RequestParam filePath: String): ResponseEntity<Map<String, Any>> {
+    
+            // filePath gets shared to subscripts via nsmap at top of this file
+            ` ./KotlinController-imeta-device.sh ${v}imeta_device_ `
+            ` ./KotlinController-imeta-date.sh ${v}imeta_date_ `
+            return ResponseEntity.ok(
+                mapOf(
+                    "filePath" to ${!file_path},
+                    "date" to ${v}imeta_date_Date, // normal non-shared namespace variable access
+                    "model" to ${v}imeta_device_Model
+                )
             )
-        )
+        }
     }
-}
+EOF
 ```
 
 KotlinController-imeta-device.sh
