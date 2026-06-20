@@ -10,3 +10,6 @@
 *.pdf
 
 node_modules/
+
+*.jar
+orclib-kt/test/*.kt

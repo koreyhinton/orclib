@@ -1,0 +1,11 @@
+#!/bin/bash
+
+./imeta-crt-dvc-precedence.sh > ./imeta_crt_dvc_precedence.kt && \
+    kotlinc imeta_crt_dvc_precedence.kt -include-runtime -d imeta_crt_dvc_precedence.jar && \
+        java -cp imeta_crt_dvc_precedence.jar org.example.Imeta_crt_dvc_precedenceKt
+        # java -cp imeta-crt-dvc-precedence.jar org.example.MainKt
+# kotlin main.kt
+
+
+# finding the class name:
+#     jar tf imeta-crt-dvc-precedence.jar | grep "\.class$" | grep -v "META-INF" | grep org | grep example
