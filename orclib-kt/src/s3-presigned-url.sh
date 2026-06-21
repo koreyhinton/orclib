@@ -1,6 +1,5 @@
 #!/bin/bash
 
-: "${s3c:=software.amazon.awssdk.services.s3.S3Client}"
 : "${reg:=software.amazon.awssdk.regions.Region}"
 : "${cred:=software.amazon.awssdk.auth.credentials.AwsBasicCredentials}"
 : "${cred_prov:=software.amazon.awssdk.auth.credentials.StaticCredentialsProvider}"
@@ -34,20 +33,6 @@ cat << EOF
 
     var ${v}Url: String? = null
     try {
-
-        val ${v}S3Client = ${s3c}.builder()
-            .region(${reg}.of(System.getProperty("AWS_REGION")))
-            .credentialsProvider(
-                ${cred_prov}.create(
-                    ${cred}.create(
-                        System.getProperty("AWS_ACCESS_KEY_ID"),
-                        System.getProperty("AWS_SECRET_ACCESS_KEY")
-                    )
-                )
-            )
-            .endpointOverride(${uri}.create(System.getProperty("AWS_URL")))
-            .build()
-
         val ${v}PSigner = ${psigner}.builder()
             .region(${reg}.of(System.getProperty("AWS_REGION")))
             .credentialsProvider(
